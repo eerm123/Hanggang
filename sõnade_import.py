@@ -3,7 +3,7 @@ from nltk.corpus import words
 from nltk.corpus import PlaintextCorpusReader
 
 import random
-
+nltk.download("spanish")
 english_words = words.words('en-basic')
 
 random_index = random.randint(0, len(english_words) - 1)
