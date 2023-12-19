@@ -10,12 +10,13 @@ pygame.init()
 LAIUS, KÕRGUS = 800, 600
 MUST = (0, 0, 0)
 VALGE = (255, 255, 255)
+KOLLANE = (255, 255, 0)
 PEALKIRI = "Hängmän"
 
 pygame.mixer.music.load("DokiMusic.mp3")
 pygame.mixer.music.set_volume(0.5)
 
-taustapilt_menüü = pygame.image.load("hängmän0.png")
+taustapilt_menüü = pygame.image.load("hangman_menüü.png")
 taustapilt_menüü = pygame.transform.scale(taustapilt_menüü, (LAIUS, KÕRGUS))
 taustapilt_mäng = pygame.image.load("Doki.png")
 taustapilt_mäng = pygame.transform.scale(taustapilt_mäng, (LAIUS,KÕRGUS))
@@ -46,14 +47,14 @@ hovered_choice = None  #Valin menüüvalikule hiirega liikumise jälgimise
 
 #Menüü tekstid ja nende asukohad ekraani peal
 tekstid = [
-    {"tekst": "Yo yo wälcome tu the gaem!", "x": 50, "y": 50},
+    {"tekst": "Tere tulemast Hanggangi!", "x": 50, "y": 50},
     {"tekst": "Valige üks võimalus:", "x": 50, "y": 140},
     {"tekst": "Alusta Hängmäni mängu", "x": 50, "y": 200},
     {"tekst": "Hängman blitz (2min)", "x": 50, "y": 250},
     {"tekst": "Välju", "x": 50, "y": 300},
 ]
 menüü_font = pygame.font.Font(None, 36)
-teksti_värv = VALGE
+teksti_värv = KOLLANE
 
 #Funktsioon menüüvaliku hoveri jälgimiseks
 def kas_valik_hover(x, y, valik_laius, valik_kõrgus):
@@ -133,7 +134,6 @@ while menüü_jookseb:
 
     #Kui mäng pole veel alustatud, siis kuva menüüd
     if not alusta_mäng:
-        #aken.fill(MUST)
         aken.blit(taustapilt_menüü, (0, 0))
         for tekst_info in tekstid:
             tekst = menüü_font.render(tekst_info["tekst"], True, teksti_värv)
