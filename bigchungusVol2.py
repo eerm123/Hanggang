@@ -66,7 +66,9 @@ def kas_valik_hover(x, y, valik_laius, valik_kõrgus):
         return True
     return False
 
+##############################################################################################################################
 #Funktsioon uue suvalise sõna saamiseks
+
 def saa_suvaline_sõna():
     veebiaadress = "https://www.cl.ut.ee/ressursid/sagedused/tabel1.txt"
     urlfail = urlopen(veebiaadress)
@@ -86,7 +88,9 @@ def saa_suvaline_sõna():
         print("Ei leitud sobivaid sõnu")
         return ""
 
+##############################################################################################################################
 #Main menüü tsükkel
+    
 menüü_jookseb = True
 while menüü_jookseb:
     for sündmus in pygame.event.get():
@@ -132,7 +136,9 @@ while menüü_jookseb:
                     menüü_jookseb = False
                     pygame.quit()
 
+##############################################################################################################################
     #Kui mäng pole veel alustatud, siis kuva menüüd
+                    
     if not alusta_mäng:
         aken.blit(taustapilt_menüü, (0, 0))
         for tekst_info in tekstid:
@@ -152,7 +158,9 @@ while menüü_jookseb:
 
     pygame.display.update()
 
+##############################################################################################################################
 #Täiendatud varjatud sõna loomine, kõik tähed nähtavad
+    
 varjatud_sõna = list("_" * len(suvaline_sõna))
 
 #Kõik tähed nähtavad
@@ -168,7 +176,9 @@ varjundi_rect = pygame.Rect(teksti_rect.left - 2, teksti_rect.top - 2, teksti_re
 mängu_kestus = 120
 algus_aeg = pygame.time.get_ticks()
 
+##############################################################################################################################
 #Põhimängu tsükkel
+
 mängu_jookseb = True
 while mängu_jookseb:
     for sündmus in pygame.event.get():
@@ -177,7 +187,9 @@ while mängu_jookseb:
             pygame.quit()
             sys.exit()
 
-        #Koodi lisamine, et haldada mängu loogikat
+##############################################################################################################################
+        #Esimese mängu mode(Tavaline hängmän)
+            
         if alusta_mäng and valiku_näitaja == 0:
             taustapilt = taustapilt_mäng
             menüü_reziim = False
@@ -187,7 +199,7 @@ while mängu_jookseb:
                 if sündmus.unicode.isalpha():  #Kontrollib, kas sisestatud sümbol on täht
                     arvatud_täht = sündmus.unicode.upper()
                     if arvatud_täht in kõik_tähed:
-                        kõik_tähed.remove(arvatud_täht)  ##Eemalda täht valikust
+                        kõik_tähed.remove(arvatud_täht)  #Eemalda täht valikust
                         if arvatud_täht in suvaline_sõna:
                             #Õige tähe arvamine, vaheta varjatud sõna vastavalt
                             for i, täht in enumerate(suvaline_sõna):
@@ -204,7 +216,7 @@ while mängu_jookseb:
                                 aken.blit(mängija_kaotas_varjund, varjundi_rect.topleft)
                                 aken.blit(mängija_kaotas_render, teksti_rect.topleft)
                                 pygame.display.update()
-                                pygame.time.delay(5000)  #Ootab 5000 ms (5 sekundit)
+                                pygame.time.delay(5000)  #Ootab (5 sekundit)
                                 pygame.quit()
                                 sys.exit()
 
@@ -264,6 +276,10 @@ while mängu_jookseb:
                 aken.blit(sõna_pikkus_varjund, varjundi_rect.topleft)
                 aken.blit(sõna_pikkus_render, teksti_rect.topleft)
 
+##############################################################################################################################
+##############################################################################################################################  
+        #Teise mängu mode(Hängmän tupsu all)
+                
         elif alusta_mäng and valiku_näitaja == 1:
             taustapilt = taustapilt_mäng
             menüü_reziim = False
