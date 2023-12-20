@@ -50,7 +50,7 @@ tekstid = [
     {"tekst": "Tere tulemast Hanggangi!", "x": 50, "y": 50},
     {"tekst": "Valige üks võimalus:", "x": 50, "y": 140},
     {"tekst": "Alusta Hängmäni mängu", "x": 50, "y": 200},
-    {"tekst": "Hängman blitz (2min)", "x": 50, "y": 250},
+    {"tekst": "Hängmän blitz (2min)", "x": 50, "y": 250},
     {"tekst": "Välju", "x": 50, "y": 300},
 ]
 menüü_font = pygame.font.Font(None, 36)
@@ -112,6 +112,17 @@ while menüü_jookseb:
             if hovered_choice == valiktekst:
                 hovered_choice = None
                 tekstid[2]["tekst"] = "Alusta Hängmäni mängu"
+        if kas_valik_hover(x, y, valik_laius, valik_kõrgus):
+            hovered_choice = valiktekst
+            if i == 1:
+                tekstid[3]["tekst"] = "Hängmän blitz (2min)"
+            else:
+                tekstid[3]["tekst"] = "Hängmän blitz (2min)"
+        else:
+            if hovered_choice == valiktekst:
+                hovered_choice = None
+                tekstid[3]["tekst"] = "Hängmän blitz (2min)"
+        
 
         if sündmus.type == pygame.MOUSEBUTTONDOWN and sündmus.button == 1:
             if kas_valik_hover(x, y, valik_laius, valik_kõrgus):
@@ -124,7 +135,7 @@ while menüü_jookseb:
                     print("Varjatud sõna:", varjatud_sõna)
                     menüü_jookseb = False
                     valiku_näitaja = 0
-                elif valiktekst == "Hängman blitz":
+                elif valiktekst == "Hängmän blitz (2min)":
                     alusta_mäng = True
                     suvaline_sõna = saa_suvaline_sõna().upper()
                     mängusõna = list(suvaline_sõna)  #Konverteerib sõna suurteks tähtedeks
@@ -287,6 +298,12 @@ while mängu_jookseb:
             jooksnud_aeg = (pygame.time.get_ticks() - algus_aeg) // 1000
 
             if jooksnud_aeg >= mängu_kestus:
+                aken.fill((20, 20, 20))
+                aken.blit(hangman_pildid[vigu], (65, 50))
+                aken.blit(mängija_kaotas_varjund, varjundi_rect.topleft)
+                aken.blit(mängija_kaotas_render, teksti_rect.topleft)
+                pygame.display.update()
+                pygame.time.delay(5000)
                 print("Aeg sai otsa!")
                 pygame.quit()
                 sys.exit()
