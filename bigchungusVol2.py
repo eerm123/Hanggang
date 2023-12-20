@@ -5,7 +5,10 @@ import random
 import re
 import time
 
-#Algseadistus
+##############################################################################################################################
+#                                                       Algseadistus                                                         # 
+##############################################################################################################################
+
 pygame.init()
 LAIUS, KÕRGUS = 800, 600
 MUST = (0, 0, 0)
@@ -23,7 +26,10 @@ taustapilt_mäng = pygame.transform.scale(taustapilt_mäng, (LAIUS,KÕRGUS))
 
 menüü_reziim = True
 
-#Lisatud Hängmäni pildid
+##############################################################################################################################
+#                                                 Lisatud Hängmäni pildid                                                    #
+##############################################################################################################################
+
 hangman_pildid = [
     pygame.image.load("hängmän1.png"),
     pygame.image.load("hängmän2.png"),
@@ -35,7 +41,10 @@ hangman_pildid = [
     pygame.image.load("hängmän8.png"),
 ]
 
-#Loon Pygame'i akna
+##############################################################################################################################
+#                                                   Loon Pygame'i akna                                                       #
+##############################################################################################################################
+
 aken = pygame.display.set_mode((LAIUS, KÕRGUS))
 pygame.display.set_caption(PEALKIRI)
 
@@ -45,7 +54,10 @@ vigu = 0
 alusta_mäng = False
 hovered_choice = None  #Valin menüüvalikule hiirega liikumise jälgimise
 
-#Menüü tekstid ja nende asukohad ekraani peal
+##############################################################################################################################
+#                                       Menüü tekstid ja nende asukohad ekraani peal                                         # 
+##############################################################################################################################
+
 tekstid = [
     {"tekst": "Tere tulemast Hanggangi!", "x": 50, "y": 50},
     {"tekst": "Valige üks võimalus:", "x": 50, "y": 140},
@@ -54,9 +66,13 @@ tekstid = [
     {"tekst": "Välju", "x": 50, "y": 300},
 ]
 menüü_font = pygame.font.Font(None, 36)
+aeg_font = pygame.font.Font(None, 36)
 teksti_värv = KOLLANE
 
-#Funktsioon menüüvaliku hoveri jälgimiseks
+##############################################################################################################################
+#                                       Funktsioon menüüvaliku hoveri jälgimiseks                                            # 
+##############################################################################################################################
+
 def kas_valik_hover(x, y, valik_laius, valik_kõrgus):
     global hovered_choice
     hiire_x, hiire_y = pygame.mouse.get_pos()
@@ -67,7 +83,8 @@ def kas_valik_hover(x, y, valik_laius, valik_kõrgus):
     return False
 
 ##############################################################################################################################
-#Funktsioon uue suvalise sõna saamiseks
+#                                           Funktsioon uue suvalise sõna saamiseks                                           #
+##############################################################################################################################
 
 def saa_suvaline_sõna():
     veebiaadress = "https://www.cl.ut.ee/ressursid/sagedused/tabel1.txt"
@@ -89,7 +106,8 @@ def saa_suvaline_sõna():
         return ""
 
 ##############################################################################################################################
-#Main menüü tsükkel
+#                                              Main menüü tsükkel                                                            #
+##############################################################################################################################
     
 menüü_jookseb = True
 while menüü_jookseb:
@@ -148,12 +166,24 @@ while menüü_jookseb:
                     pygame.quit()
 
 ##############################################################################################################################
-    #Kui mäng pole veel alustatud, siis kuva menüüd
+#                                   Kui mäng pole veel alustatud, siis kuva menüüd                                           #
+##############################################################################################################################
                     
     if not alusta_mäng:
+        
         aken.blit(taustapilt_menüü, (0, 0))
         for tekst_info in tekstid:
             tekst = menüü_font.render(tekst_info["tekst"], True, teksti_värv)
+            aken.blit(tekst, (tekst_info["x"], tekst_info["y"]))
+
+        for tekst_info in tekstid:
+            tekst = menüü_font.render(tekst_info["tekst"], True, KOLLANE)  #Teksti värv on KOLLANE
+            tekst_laius, tekst_kõrgus = menüü_font.size(tekst_info["tekst"])
+
+            #Lisan kollase tausta
+            pygame.draw.rect(aken, MUST, (tekst_info["x"] - 5, tekst_info["y"], tekst_laius + 10, tekst_kõrgus))
+
+            #Lisan teksti
             aken.blit(tekst, (tekst_info["x"], tekst_info["y"]))
 
         #Valitud menüüvaliku hoveri näitamine
@@ -164,32 +194,38 @@ while menüü_jookseb:
 
     # Kui mängu käima paned, siis kuvab alguspilti
     if alusta_mäng:
+        if sündmus.type == pygame.KEYDOWN:
+            if sündmus.unicode.isalpha():
+                arvatud_tähed = sündmus.unicode.upper()
         aken.fill((20,20,20))
         aken.blit(hangman_pildid[vigu], (65, 50))
 
     pygame.display.update()
 
 ##############################################################################################################################
-#Täiendatud varjatud sõna loomine, kõik tähed nähtavad
-    
+#                               Täiendatud varjatud sõna loomine, kõik tähed nähtavad                                        #
+##############################################################################################################################
+   
 varjatud_sõna = list("_" * len(suvaline_sõna))
 
-#Kõik tähed nähtavad
+#Kõik tähed listis
 kõik_tähed = set("ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖÕ")
 
 #Siin näita kaotus ekraani kus kuvab viimast pilti
 mängija_kaotas_tekst = "Mängija kaotas! Õige sõna oli: " + suvaline_sõna
-mängija_kaotas_render = menüü_font.render(mängija_kaotas_tekst, True, VALGE)
-mängija_kaotas_varjund = menüü_font.render(mängija_kaotas_tekst, True, MUST)
+mängija_kaotas_varjund = menüü_font.render(mängija_kaotas_tekst, True, VALGE)
 
-teksti_rect = mängija_kaotas_render.get_rect(topleft=(65, 300))
+teksti_rect = mängija_kaotas_varjund.get_rect(topleft=(65, 300))
 varjundi_rect = pygame.Rect(teksti_rect.left - 2, teksti_rect.top - 2, teksti_rect.width + 4, teksti_rect.height + 4)
 mängu_kestus = 120
 algus_aeg = pygame.time.get_ticks()
 
 ##############################################################################################################################
-#Põhimängu tsükkel
+#                                                   Põhimängu tsükkel                                                        #
+##############################################################################################################################
 
+#Seadistan aja uuendamise sündmust
+pygame.time.set_timer(pygame.USEREVENT, 1000) #Sündmus kontrollib/käivitab ennast iga sekund
 mängu_jookseb = True
 while mängu_jookseb:
     for sündmus in pygame.event.get():
@@ -197,10 +233,13 @@ while mängu_jookseb:
             mängu_jookseb = False
             pygame.quit()
             sys.exit()
+        elif sündmus.type == pygame.USEREVENT:
+            mängu_kestus = max(0, mängu_kestus - 1) #Kui sündmus toimub, siis vähenda aega sekundi võrra
 
 ##############################################################################################################################
-        #Esimese mängu mode(Tavaline hängmän)
-            
+#                                          Esimese mängu mode(Tavaline hängmän)                                              #
+##############################################################################################################################
+          
         if alusta_mäng and valiku_näitaja == 0:
             taustapilt = taustapilt_mäng
             menüü_reziim = False
@@ -225,7 +264,6 @@ while mängu_jookseb:
                                 aken.fill((20, 20, 20))
                                 aken.blit(hangman_pildid[vigu], (65, 50))
                                 aken.blit(mängija_kaotas_varjund, varjundi_rect.topleft)
-                                aken.blit(mängija_kaotas_render, teksti_rect.topleft)
                                 pygame.display.update()
                                 pygame.time.delay(5000)  #Ootab (5 sekundit)
                                 pygame.quit()
@@ -287,28 +325,28 @@ while mängu_jookseb:
                 aken.blit(sõna_pikkus_varjund, varjundi_rect.topleft)
                 aken.blit(sõna_pikkus_render, teksti_rect.topleft)
 
-##############################################################################################################################
 ##############################################################################################################################  
-        #Teise mängu mode(Hängmän tupsu all)
+#                                           Teise mängu mode(Hängmän tupsu all)                                              #
+##############################################################################################################################  
                 
         elif alusta_mäng and valiku_näitaja == 1:
             taustapilt = taustapilt_mäng
             menüü_reziim = False
-
-            jooksnud_aeg = (pygame.time.get_ticks() - algus_aeg) // 1000
-
-            if jooksnud_aeg >= mängu_kestus:
+            mängu_aeg = pygame.time.get_ticks() - algus_aeg
+            #Siin ma arvutan mängu kestust mänguajaga, ehk iga sekund läheb aega väiksemaks ja kui sisestatakse vale täht võetakse mängu ajast 20 sekundit ära
+            mängu_kestus = max(0, 120 - mängu_aeg // 1000 - vigu * 20)
+            #Kui mängu kell on 0, siis lõpeta mäng
+            if mängu_kestus <= 0:
                 aken.fill((20, 20, 20))
                 aken.blit(hangman_pildid[vigu], (65, 50))
                 aken.blit(mängija_kaotas_varjund, varjundi_rect.topleft)
-                aken.blit(mängija_kaotas_render, teksti_rect.topleft)
                 pygame.display.update()
                 pygame.time.delay(5000)
                 print("Aeg sai otsa!")
                 pygame.quit()
                 sys.exit()
-
             arvatud_tähed = set()
+
             if sündmus.type == pygame.KEYDOWN:
                 if sündmus.unicode.isalpha():  #Kontrollib, kas sisestatud sümbol on täht
                     arvatud_täht = sündmus.unicode.upper()
@@ -328,17 +366,19 @@ while mängu_jookseb:
                                 aken.fill((20, 20, 20))
                                 aken.blit(hangman_pildid[vigu], (65, 50))
                                 aken.blit(mängija_kaotas_varjund, varjundi_rect.topleft)
-                                aken.blit(mängija_kaotas_render, teksti_rect.topleft)
                                 pygame.display.update()
                                 pygame.time.delay(5000)  #Ootab 5000 ms (5 sekundit)
                                 pygame.quit()
                                 sys.exit()
-
+                
             if not menüü_reziim:
+                
                 aken.blit(taustapilt, (0, 0))
 
                 aken.blit(hangman_pildid[vigu], (65, 50))
 
+                text_box_rect = pygame.Rect(50, 410, 800, 550)
+                pygame.draw.rect(aken, MUST, text_box_rect)
                 #Kuvab varjatud sõna
                 varjatud_tekst = " ".join(varjatud_sõna)
                 varjatud_tekst_render = menüü_font.render(varjatud_tekst, True, VALGE)
@@ -361,12 +401,13 @@ while mängu_jookseb:
                 aken.blit(arvatud_tähed_render, teksti_rect.topleft)
 
                 #Kuvab tähti, mida peab arvama
-                valikus_olevad_tähed = ", ".join(kõik_tähed)
+                sorted_kõik_tähed = sorted(kõik_tähed)
+                valikus_olevad_tähed = ", ".join(sorted_kõik_tähed)
                 peab_arvama_render = menüü_font.render("Valikus olevad tähed: " + valikus_olevad_tähed, True, VALGE)
                 peab_arvama_varjund = menüü_font.render("Valikus olevad tähed: " + valikus_olevad_tähed, True, MUST)
 
                 if peab_arvama_render.get_width() > LAIUS:
-                    #Vähendab teksti suurust, et see mahuks ekraanile
+                    # Vähendab teksti suurust, et see mahuks ekraanile
                     uus_font = pygame.font.Font(None, 22)
                     peab_arvama_render = uus_font.render("Valikus olevad tähed: " + valikus_olevad_tähed, True, VALGE)
                     peab_arvama_varjund = uus_font.render("Valikus olevad tähed: " + valikus_olevad_tähed, True, MUST)
@@ -386,5 +427,16 @@ while mängu_jookseb:
 
                 aken.blit(sõna_pikkus_varjund, varjundi_rect.topleft)
                 aken.blit(sõna_pikkus_render, teksti_rect.topleft)
+                
+                #Kuvab järelejäänud aja
+                minutid, sekundid = divmod(mängu_kestus, 60)
+                aeg_tekst = f"Aeg: {minutid:02d}:{sekundid:02d}"
+                aeg_render = aeg_font.render(aeg_tekst, True, VALGE)
 
-    pygame.display.update()
+                #Aja tekst ülesse paremasse nurka
+                teksti_rect = aeg_render.get_rect(topright=(LAIUS - 10, 10))
+
+                aken.blit(aeg_render, teksti_rect.topleft)
+
+
+        pygame.display.update()
